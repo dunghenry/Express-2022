@@ -13,6 +13,8 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+require('events').EventEmitter.defaultMaxListeners = 0;
+
 const app = express();
 
 app.use(express.urlencoded({ extended: false}));
