@@ -30,6 +30,7 @@ const getAllStudents = async (req, res) => {
                     doc.data().lastName,
                 ) 
                 studentsArr.push(student);
+
             })
             res.send(studentsArr);
         }
@@ -37,7 +38,48 @@ const getAllStudents = async (req, res) => {
         res.status(400).send(error.message);
     }
 }
+
+const getStudent = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const student = await db.collection("students").doc(id);
+        const data = await student.get();
+        if(!data.exists){
+            res.status(400).send("Student with the given ID not found.");
+        }
+        else{
+            res.send(data.data());
+        }
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+const updateStudent = async(req, res) =>{
+    try {
+        
+        const id = req.params.id;
+        const data = req.body;
+        const student = await db.collection("students").doc(id);
+        await student.update(data);
+        res.send("Student record updated successfully!");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
+
+const deleteStudent = async (req, res) => {
+    try {
+        const id = req.params.id;
+        await db.collection("students").doc(id).delete();
+        res.send("Record deleted successfully!");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+}
 module.exports = {
     addStudent,
-    getAllStudents
+    getAllStudents,
+    getStudent,
+    updateStudent,
+    deleteStudent
 }
